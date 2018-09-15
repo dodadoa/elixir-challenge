@@ -1,18 +1,8 @@
 defmodule ElixirChallenge do
-  @moduledoc """
-  Documentation for ElixirChallenge.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ElixirChallenge.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  @spec transform(any()) :: any()
+  def transform(data) do
+    %{ 0 => parent, 1 => child } = data
+    new_data = %{ Map.delete(Enum.at(parent, 0), :parent_id) | children: child }
+    [new_data]
   end
 end
