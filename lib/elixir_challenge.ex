@@ -1,16 +1,16 @@
 defmodule ElixirChallenge do
-  defp getAllChildrenByParentId(children, parentId) do
+  defp get_all_children_by_parent_id(children, parent_id) do
     Enum.filter(children, fn child ->
-      Map.get(child, :parent_id) == parentId
+      child[:parent_id] == parent_id
     end)
   end
 
-  defp putChildrenToParent(children, parent) do
+  defp put_children_to_parent(children, parent) do
     Map.update(
       parent,
       :children,
       [],
-      fn _ -> getAllChildrenByParentId(children, Map.get(parent, :id)) end
+      fn _ -> get_all_children_by_parent_id(children, Map.get(parent, :id)) end
     )
   end
 
@@ -24,7 +24,7 @@ defmodule ElixirChallenge do
         if children == [] do
           parents
         else
-          Enum.map(parents, fn parent -> putChildrenToParent(children, parent) end)
+          Enum.map(parents, fn parent -> put_children_to_parent(children, parent) end)
         end
       end
     )
