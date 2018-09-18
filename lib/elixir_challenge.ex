@@ -10,7 +10,7 @@ defmodule ElixirChallenge do
       parent,
       :children,
       [],
-      fn _ -> get_all_children_by_parent_id(children, Map.get(parent, :id)) end
+      fn _ -> get_all_children_by_parent_id(children, parent[:id]) end
     )
   end
 
