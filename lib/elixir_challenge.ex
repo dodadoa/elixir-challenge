@@ -1,8 +1,26 @@
 defmodule ElixirChallenge do
-  @spec transform(any()) :: any()
   def transform(data) do
-    %{ 0 => parent, 1 => child } = data
-    new_data = %{ Map.delete(Enum.at(parent, 0), :parent_id) | children: child }
-    [new_data]
+    data
+    |> Map.to_list()
+    |> Enum.reverse()
+    |> Enum.reduce(
+      [],
+      fn {_, listOfElement}, accumulator ->
+        if accumulator == [] do
+          accumulator ++ listOfElement
+        else
+          listOfElement
+          |> Enum.map(fn parent ->
+            parent
+            |> update_in([:children], fn listOfParents ->
+              listOfParents ++
+                Enum.filter(accumulator, fn children ->
+                  Map.get(children, :parent_id) == Map.get(parent, :id)
+                end)
+            end)
+          end)
+        end
+      end
+    )
   end
 end
