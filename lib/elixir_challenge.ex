@@ -1,8 +1,17 @@
 defmodule ElixirChallenge do
-  defp getAllChildrenByParentId(parentId, childrens) do
-    Enum.filter(childrens, fn children ->
-      Map.get(children, :parent_id) == parentId
+  defp getAllChildrenByParentId(children, parentId) do
+    Enum.filter(children, fn child ->
+      Map.get(child, :parent_id) == parentId
     end)
+  end
+
+  defp putChildrenToParent(children, parent) do
+    Map.update(
+      parent,
+      :children,
+      [],
+      fn _ -> getAllChildrenByParentId(children, Map.get(parent, :id)) end
+    )
   end
 
   def transform(data) do
@@ -11,20 +20,11 @@ defmodule ElixirChallenge do
     |> Enum.reverse()
     |> Enum.reduce(
       [],
-      fn {_level, parents}, childrens ->
-        if childrens == [] do
+      fn {_level, parents}, children ->
+        if children == [] do
           parents
         else
-          parents
-          |> Enum.map(fn parent ->
-            parent
-            |> update_in(
-              [:children],
-              fn _ ->
-                getAllChildrenByParentId(Map.get(parent, :id), childrens)
-              end
-            )
-          end)
+          Enum.map(parents, fn parent -> putChildrenToParent(children, parent) end)
         end
       end
     )
