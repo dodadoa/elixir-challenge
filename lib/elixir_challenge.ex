@@ -20,8 +20,8 @@ defmodule ElixirChallenge do
             parent
             |> update_in(
               [:children],
-              fn listOfChildren ->
-                listOfChildren ++ getAllChildrenByParentId(Map.get(parent, :id), childrens)
+              fn _ ->
+                getAllChildrenByParentId(Map.get(parent, :id), childrens)
               end
             )
           end)
